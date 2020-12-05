@@ -53,8 +53,10 @@ let naloga1 vsebina_datoteke =
 
 (* 2. DEL *)
 
-
 let testni_hcl = ['#'; '0'; '1'; '2'; '3'; '4'; '5'; '6'; '7'; '8'; '9'; 'a'; 'b'; 'c'; 'd'; 'e'; 'f']
+
+(*vir kode https://reasonml.chat/t/iterate-over-a-string-pattern-match-on-a-string/1317 *)
+let niz_v_seznam string = string |> String.to_seq |> List.of_seq
 
 let naloga2 vsebina_datoteke = 
     let seznam = vhod_v_seznam vsebina_datoteke in 
@@ -95,7 +97,7 @@ let naloga2 vsebina_datoteke =
                                 then 1
                                 else 0 
                             else 0
-                        else 0
+                        else poglej_hgt xs
                             
                     else poglej_hgt xs
             in 
@@ -107,7 +109,12 @@ let naloga2 vsebina_datoteke =
                 | x :: xs -> 
                     if List.nth x 0 = "hcl" then 
                         if (String.length (List.nth x 1) = 7) &&  ((List.nth x 1).[0] = '#') then 
-                            1 else 0
+                            let rec aux testni = function
+                                | [] -> 1
+                                | x :: xs -> if List.mem x testni then aux testni xs else 0 
+                            in 
+                            aux testni_hcl (niz_v_seznam (List.nth x 1))  
+                        else 0
 
                     else poglej_hcl xs 
             
@@ -132,24 +139,14 @@ let naloga2 vsebina_datoteke =
                     if List.nth x 0 = "pid" then 
                         if String.length (List.nth x 1) = 9 then 1
                         else 0 
-                    else 0
+                    else poglej_pid xs
             
             in 
             let pid = poglej_pid (List.map (String.split_on_char ':') seznam_polj) in
 
 
 
-                if byr + iyr + eyr + hgt + hcl + ecl + pid >= 7 then 1 else 0
-
-        (*| 7 -> 
-            let rec poglej_cid = function
-            | [] -> 1
-            | x :: xs -> 
-                if List.nth x 0 = "cid" then 0
-                else poglej_cid xs
-            in 
-            poglej_cid (List.map (String.split_on_char ':') seznam_polj)*)
-
+                if byr + iyr + eyr + hgt + hcl + ecl + pid = 7 then 1 else 0
         
         | _ -> 0
     in 
