@@ -23,25 +23,12 @@ let pretvori_v_uporabno seznam =
     List.map (String.trim) (aux "" seznam)
 
 
-
-let presek sez1 sez2 = 
-    let rec aux acc l1 l2 = 
-        match l1 with 
-        | [] -> acc 
-        | x :: xs ->
-            if List.mem x l2 then aux (x :: acc) xs l2 
-            else aux acc xs l2
-    in 
-    aux [] sez1 sez2 
-
-
 let rec unija sez1 sez2 = 
     match sez1 with 
     | [] -> sez2 
     | x :: xs ->
             if not (List.mem x sez2) then unija xs (x :: sez2)
             else unija xs sez2
-
 
 
 (*vir kode https://reasonml.chat/t/iterate-over-a-string-pattern-match-on-a-string/1317 *)
@@ -54,8 +41,7 @@ let strinjanje niz =
     let rec aux acc sez = 
         match sez with 
         | [] -> acc 
-        | x :: y :: xs -> aux (unija x y) xs 
-        | x :: [] -> aux (unija x acc) []
+        | x :: xs -> aux (unija x acc) xs
     in 
     aux [] uporaben
     
@@ -65,14 +51,41 @@ let rec vsota = function
     | x :: xs -> x + vsota xs
 
 
-
 let naloga1 vsebina_datoteke = 
     let seznam = vsebina_datoteke |> vhod_v_seznam |> pretvori_v_uporabno in 
     let sez_yes = seznam |> (List.map strinjanje) |> (List.map List.length) in 
     string_of_int (vsota sez_yes)
 
 
-let naloga2 vsebina_datoteke = "ne"
+(* 2. DEL *)
+
+
+let presek sez1 sez2 = 
+    let rec aux acc l1 l2 = 
+        match l1 with 
+        | [] -> acc 
+        | x :: xs ->
+            if List.mem x l2 then aux (x :: acc) xs l2 
+            else aux acc xs l2
+    in 
+    aux [] sez1 sez2 
+
+
+let strinjanje_strogo niz = 
+    let sez = String.split_on_char ' ' niz in 
+    let uporaben = List.map niz_v_seznam sez in 
+    let rec aux acc sez = 
+        match sez with 
+        | [] -> acc 
+        | x :: xs -> aux (presek x acc) xs
+    in 
+    aux (List.nth uporaben 0) uporaben
+
+
+let naloga2 vsebina_datoteke = 
+    let seznam = vsebina_datoteke |> vhod_v_seznam |> pretvori_v_uporabno in 
+    let sez_yes = seznam |> (List.map strinjanje_strogo) |> (List.map List.length) in 
+    string_of_int (vsota sez_yes)
 
 
 (* rahlo modificirana koda iz spletne učilnice *)
