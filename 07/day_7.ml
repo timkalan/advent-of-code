@@ -80,26 +80,39 @@ let podtorbe_stevila vrstica =
         (nadtorba, [])
     
     | x :: [] -> 
-        let podtorba = (List.nth (sez_besed vrstica) (dolzina_seza - 4)) ^ 
-                        " " ^ (List.nth (sez_besed vrstica) (dolzina_seza - 3)) ^ 
-                        " " ^ (List.nth (sez_besed vrstica) (dolzina_seza - 2)) in 
+        let podtorba = (int_of_string (List.nth (sez_besed vrstica) (dolzina_seza - 4)), 
+                        (List.nth (sez_besed vrstica) (dolzina_seza - 3)) ^ 
+                        " " ^ (List.nth (sez_besed vrstica) (dolzina_seza - 2))) in 
         (nadtorba, [podtorba])
     
     | x :: xs -> 
         let rec aux acc = function 
             | [] -> acc 
-            | x :: xs -> aux (((List.nth (sez_besed x) 1) ^ " " ^ 
+            | x :: xs -> aux (((int_of_string (List.nth (sez_besed x) 1), 
                         (List.nth (sez_besed x) 2) ^ " " ^ 
-                        (List.nth (sez_besed x) 3)) :: acc) xs 
+                        (List.nth (sez_besed x) 3))) :: acc) xs 
         in 
-        let podtorba = (List.nth (sez_besed x) (List.length (sez_besed x) - 4)) ^ 
-                        " " ^ (List.nth (sez_besed x) (List.length (sez_besed x) - 3)) ^ 
-                        " " ^ (List.nth (sez_besed x) (List.length (sez_besed x) - 2)) in 
+        let podtorba = (int_of_string(List.nth (sez_besed x) (List.length (sez_besed x) - 4)),
+                        (List.nth (sez_besed x) (List.length (sez_besed x) - 3)) ^ 
+                        " " ^ (List.nth (sez_besed x) (List.length (sez_besed x) - 2))) in 
         (nadtorba, podtorba :: (aux [] xs))
 
 
-let naloga2 vsebina_datoteke = "10"
+let naloga2 vsebina_datoteke = 
+    let torbe = vsebina_datoteke |> vhod_v_seznam |> (List.map podtorbe) in 
+    let graf = Gr torbe in 
+    let za_pogledat = bfs "shiny gold" graf in 
 
+
+    let rec preglej acc = function
+        | [] -> acc
+        | (torba, podtorbe) :: xs -> 
+            if List.mem "shiny gold" (bfs torba graf) then preglej (1 + acc) xs
+            else preglej acc xs
+    in 
+    let st_moznih = preglej 0 torbe in 
+    (* naš BFS šteje za možnost tudi verzijo, ko je shiny gold zunanja torba, to odštejemo *)
+    string_of_int (st_moznih - 1)
 
 
 
