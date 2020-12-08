@@ -32,7 +32,7 @@ let rec izvanjanje acc indeksi sez zacetek =
         | ("jmp", koliko) -> izvanjanje acc (zacetek :: indeksi) sez (koliko + zacetek)
         | _ -> failwith "napačen format"
 
-let naloga2 vsebina_datoteke = "10" 
+let naloga2 vsebina_datoteke = "ni še" 
 
 
 

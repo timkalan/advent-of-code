@@ -99,20 +99,7 @@ let podtorbe_stevila vrstica =
 
 
 let naloga2 vsebina_datoteke = 
-    let torbe = vsebina_datoteke |> vhod_v_seznam |> (List.map podtorbe) in 
-    let graf = Gr torbe in 
-    let za_pogledat = bfs "shiny gold" graf in 
-
-
-    let rec preglej acc = function
-        | [] -> acc
-        | (torba, podtorbe) :: xs -> 
-            if List.mem "shiny gold" (bfs torba graf) then preglej (1 + acc) xs
-            else preglej acc xs
-    in 
-    let st_moznih = preglej 0 torbe in 
-    (* naš BFS šteje za možnost tudi verzijo, ko je shiny gold zunanja torba, to odštejemo *)
-    string_of_int (st_moznih - 1)
+    "ni še"
 
 
 
