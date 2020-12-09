@@ -68,7 +68,6 @@ let naloga1 vsebina_datoteke =
 
 (* 2. DEL *)
 
-
 (* spremenimo podtorbe da zajemejo tudi števila *)
 let podtorbe_stevila vrstica = 
     let sez_besed str = String.split_on_char ' ' str in
@@ -99,7 +98,24 @@ let podtorbe_stevila vrstica =
 
 
 let naloga2 vsebina_datoteke = 
-    "ni še"
+    let torbe = vsebina_datoteke |> vhod_v_seznam |> (List.map podtorbe_stevila) in 
+    let rec prestej gledamo gradimo zunanja =
+        (* vir: https://stackoverflow.com/questions/38426922/not-found-exception-in-ocaml *)
+        match try List.assoc zunanja gradimo with Not_found -> 0 with
+            | x when x > 0 -> x 
+            | _ ->
+                if (List.assoc zunanja gledamo) = [] then 1 
+                else
+                    let rec aux sez1 sez2 = function
+                        | [] -> 0
+                        | (n, barva) :: xs ->
+                        n * (prestej sez1 sez2 barva) + aux sez1 ((barva, (prestej sez1 sez2 barva)) :: sez2) xs
+                    in
+                    1 + aux gledamo gradimo (List.assoc zunanja gledamo)
+
+    in 
+    (* spet naračunali enega preveč *)
+    (prestej torbe [] "shiny gold" - 1) |> string_of_int
 
 
 
