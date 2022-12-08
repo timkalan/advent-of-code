@@ -1,60 +1,73 @@
-from collections import defaultdict
+def is_visible(x, y, trees):
+    height = int(trees[x][y])
+    opts = 4
+    for i in range(x+1, len(trees)):
+        if int(trees[i][y]) >= height:
+            opts -= 1
+            break
+    
+    for i in range(x):
+        if int(trees[i][y]) >= height:
+            opts -= 1
+            break
 
+    for j in range(y+1, len(trees[x])):
+        if int(trees[x][j]) >= height:
+            opts -= 1
+            break
+
+    for j in range(y):
+        if int(trees[x][j]) >= height:
+            opts -= 1
+            break
+
+    if opts == 0:
+        return False
+    return True
+
+def scenic_score(x, y, trees):
+    height = int(trees[x][y])
+    left = 0
+    right = 0
+    up = 0
+    down = 0
+    for i in range(x+1, len(trees)):
+        down += 1
+        if int(trees[i][y]) >= height:
+            break
+    
+    for i in range(x-1, -1, -1):
+        up += 1
+        if int(trees[i][y]) >= height:
+            break
+
+    for j in range(y+1, len(trees[x])):
+        right += 1
+        if int(trees[x][j]) >= height:
+            break
+
+    for j in range(y-1, -1, -1):
+        left += 1
+        if int(trees[x][j]) >= height:
+            break
+
+    return up * down * left * right
 
 with open('day_8.in') as f:
-    commands = f.read().split('\n')
-    full_path = []
-    directories = defaultdict(int)
+    trees = f.read().split('\n')
+    count = 0
+    scores = []
+    for i in range(len(trees)):
+        for j in range(len(trees[i])):
+            scores.append(scenic_score(i, j, trees))
+            if is_visible(i, j, trees):
+                count += 1
 
-    for cmd in commands:
-        match cmd.split():
-            case ['$', 'cd', '..']:
-                full_path.pop()
-            case ['$', 'cd', p]:
-                full_path.append(p)
-            case ['$', 'ls']:
-                pass
-            case ['dir', p]:
-                pass
-            case [s, f]:
-                directories[tuple(full_path)] += int(s)
-                path = full_path[:-1]
-                while path:
-                    directories[tuple(path)] += int(s)
-                    path.pop()
-
-
-total = sum([_ for _ in directories.values() if _ <= 100000])
-
-needed_space = directories[('/', )] - 40000000
-to_delete = min([_ for _ in directories.values() if _ > needed_space])
-
-print(directories[('/', )])
 
 print('Part 1:')
-print(total)
+print(count)
 print()
 print('Part 2:')
-print(to_delete)
+print(max(scores))
 
 
-
-# with open('day_8.in') as f:
-#     commands = f.read().split('\n')
-#     directories = {}
-#     for i, output in enumerate(commands):
-#         if output.startswith('$ cd') and not output.endswith('..'):
-#             current_dir = output[5:]
-#             # current_dir.append(output)
-#             directories[current_dir] = {}
-
-#         elif not output.startswith('$'):
-#             if not output.startswith('dir'):
-#                 size, filename = output.split()
-#                 directories[current_dir][filename] = {int(size)}
-#             else:
-#                 directories[current_dir][output.split()[1]] = {}
-
-#         elif output.endswith('..'):
-#             # current_dir.pop()
-#             continue
