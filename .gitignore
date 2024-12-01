@@ -29,3 +29,8 @@ setup.log
 # Local OPAM switch
 _opam/
 /.metadata/
+
+# 2024
+2024/inputs
+2024/dist
+2024/node_modules
