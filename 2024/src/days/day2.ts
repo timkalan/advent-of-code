@@ -1,10 +1,7 @@
-import { readInput } from "../utils";
+import { readInput, splitIndividualNums } from "../utils";
 
 const input = readInput("day2.txt");
-
-const reports = input
-    .split("\n")
-    .map(line => line.trim().split(" ").map(Number))
+const reports = splitIndividualNums(input)
 
 const reasonableIncrease = (value: number, i: number, report: number[]) =>
     i === 0 || (1 <= value - report[i - 1] && value - report[i - 1] <= 3);

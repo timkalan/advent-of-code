@@ -1,10 +1,8 @@
-import { readInput } from "../utils";
+import { readInput, splitIndividualNums } from "../utils";
 
 const input = readInput("day1.txt");
 
-const [column1, column2] = input
-    .split("\n")
-    .map(line => line.trim().split("   ").map(Number))
+const [column1, column2] = splitIndividualNums(input)
     .reduce<[number[], number[]]>(
         ([col1, col2], [val1, val2]) => [[...col1, val1], [...col2, val2]],
         [[], []]
